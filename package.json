@@ -1,0 +1,23 @@
+{
+	"name": "bot",
+	"version": "1.0.0",
+	"description": "",
+	"main": "/src/main.js",
+	"scripts": {
+		"build": "tsc",
+		"dev": " ts-node-dev ./src/main.ts",
+		"test": "tsc && nodemon ./build.main.ts"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"discord.js": "^14.6.0",
+		"mongoose": "^6.7.2",
+		"nodemon": "^2.0.20",
+		"random-string": "^0.2.0",
+		"ts-node": "^10.9.1"
+	},
+	"devDependencies": {
+		"ts-node-dev": "^2.0.0"
+	}
+}
