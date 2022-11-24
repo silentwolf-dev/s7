@@ -1,5 +1,9 @@
 src/config.json
+
 node_modules
+
+./src/config.json
 
 config.json
 
+.env

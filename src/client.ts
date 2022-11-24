@@ -11,10 +11,10 @@ import path from "path";
 import GiveawayUitls from "./utils/giveaway";
 import randomString from "./utils/randomstring";
 const guildId = "922567360873922661";
-
-import config from "./config.json";
+import * as dotenv from "dotenv"
+dotenv.config()
 import { IStorageMap } from "./utils/giveawaymanger";
-
+console.log(process.env)
 class client extends Client {
 	commands = new Collection<string, any>();
 	giveaways = new Map<string, IStorageMap>()
@@ -59,7 +59,7 @@ class client extends Client {
 			command.push(cmds.data.toJSON());
 		}
 
-		const rest = new REST({ version: "10" }).setToken(config.token);
+		const rest = new REST({ version: "10" }).setToken(process.env.Token as string);
 
 		(async () => {
 			try {
@@ -69,7 +69,7 @@ class client extends Client {
 
 				// The put method is used to fully refresh all commands in the guild with the current set
 				const data: any = await rest.put(
-					Routes.applicationGuildCommands(config.clientId, guildId),
+					Routes.applicationGuildCommands(process.env.clientid as string, guildId),
 					{ body: command }
 				);
 
@@ -113,7 +113,7 @@ class client extends Client {
 		});
        */
 
-		this.login(config.token);
+		this.login(process.env.Token);
 	};
 };
 

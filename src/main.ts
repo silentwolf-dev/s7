@@ -2,11 +2,14 @@
 
 import client from "./client";
 
-import mongoose from "mongoose";
-import config from "./config.json";
-const uri = `mongodb+srv://admin:${config.dbpassword}@cluster0.3vcff.mongodb.net/${config.dbname}`;
+import * as dotenv from "dotenv";
+dotenv.config();
 
-console.clear()
+import mongoose from "mongoose";
+
+const uri = `mongodb+srv://admin:${process.env.db_password}@cluster0.3vcff.mongodb.net/Senior7`;
+
+console.clear();
 
 mongoose
 	.connect(uri, {
