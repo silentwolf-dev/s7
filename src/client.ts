@@ -5,7 +5,6 @@ import {
 	Collection,
 	REST,
 	Routes,
-	ThreadMemberFlagsBitField,
 } from "discord.js";
 import fs from "fs";
 import path from "path";
@@ -14,9 +13,11 @@ import randomString from "./utils/randomstring";
 const guildId = "922567360873922661";
 
 import config from "./config.json";
+import { IStorageMap } from "./utils/giveawaymanger";
 
 class client extends Client {
 	commands = new Collection<string, any>();
+	giveaways = new Map<string, IStorageMap>()
 	utils = {
 		GiveawayUitls,
 		randomString,
@@ -46,7 +47,6 @@ class client extends Client {
 			if ("data" in command && "execute" in command) {
 				this.commands.set(command.data.name, command);
 
-				console.log("successfully initialize commands");
 			} else {
 				console.log(
 					`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
@@ -84,34 +84,29 @@ class client extends Client {
 
 	loadEvent() {
 		const eventsPath = path.join(__dirname, "events");
-		console.log("event folder:", eventsPath);
 		const eventFiles = fs.readdirSync(eventsPath).filter((file) => {
-			return file.endsWith(".ts") || file.endsWith(".js");
+			return file.endsWith(".ts") || file.endsWith(".js")
 		});
 
-		console.log("successfully loaded event files:", eventFiles);
+		console.log("successfully loaded event files:", eventFiles)
 
 		for (const file of eventFiles) {
-			const filePath = path.join(eventsPath, file);
-			const event: any = require(filePath);
+			const filePath = path.join(eventsPath, file)
+			const event: any = require(filePath)
 
-			console.log("event Object:", event);
+			console.log("event Object:", event)
 			if (event.once) {
-				this.once(event.name, event.run.bind(null, this));
-
-				console.log("successfully initialize events (once)");
+				this.once(event.name, event.run.bind(null, this))
 			} else {
-				this.on(event.name, event.run.bind(null, this));
-
-				console.log("successfully initialize events (on)");
+				this.on(event.name, event.run.bind(null, this))	
 			}
 		}
 	}
 
 	start() {
-		this.loadCommands();
+		this.loadCommands()
 
-		this.loadEvent();
+		this.loadEvent()
 		/*
 		this.once("ready", (bot) => {
 			console.log(`bot is online: ${bot.user.tag}`);
@@ -119,7 +114,7 @@ class client extends Client {
        */
 
 		this.login(config.token);
-	}
-}
+	};
+};
 
 export default client;

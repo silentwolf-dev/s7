@@ -16,12 +16,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
+const giveaway_1 = __importDefault(require("./utils/giveaway"));
+const randomstring_1 = __importDefault(require("./utils/randomstring"));
 const guildId = "922567360873922661";
 const config_json_1 = __importDefault(require("./config.json"));
 class client extends discord_js_1.Client {
     constructor() {
-        super({ intents: [discord_js_1.GatewayIntentBits.Guilds] });
+        super({
+            intents: [
+                discord_js_1.GatewayIntentBits.Guilds,
+                discord_js_1.GatewayIntentBits.GuildMessageReactions,
+                discord_js_1.GatewayIntentBits.GuildMessages,
+            ],
+        });
         this.commands = new discord_js_1.Collection();
+        this.giveaways = new Map();
+        this.utils = {
+            GiveawayUitls: giveaway_1.default,
+            randomString: randomstring_1.default,
+        };
     }
     loadCommands() {
         const command = [];
@@ -31,12 +44,11 @@ class client extends discord_js_1.Client {
             .filter((file) => file.endsWith(".ts") || file.endsWith(".js"));
         for (const file of commandFiles) {
             const filePath = path_1.default.join(commandsPath, file);
-            console.log("file path", filePath);
             const command = require(filePath);
             // Set a new item in the Collection with the key as the command name and the value as the exported module
             if ("data" in command && "execute" in command) {
                 this.commands.set(command.data.name, command);
-                console.log(command);
+                console.log("successfully initialize commands");
             }
             else {
                 console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
@@ -65,18 +77,18 @@ class client extends discord_js_1.Client {
         const eventFiles = fs_1.default.readdirSync(eventsPath).filter((file) => {
             return file.endsWith(".ts") || file.endsWith(".js");
         });
-        console.log("files:", eventFiles);
+        console.log("successfully loaded event files:", eventFiles);
         for (const file of eventFiles) {
             const filePath = path_1.default.join(eventsPath, file);
             const event = require(filePath);
             console.log("event Object:", event);
             if (event.once) {
                 this.once(event.name, event.run.bind(null, this));
-                console.log("init events once");
+                console.log("successfully initialize events (once)");
             }
             else {
                 this.on(event.name, event.run.bind(null, this));
-                console.log("init events");
+                console.log("successfully initialize events (on)");
             }
         }
     }
@@ -90,5 +102,7 @@ class client extends discord_js_1.Client {
        */
         this.login(config_json_1.default.token);
     }
+    ;
 }
+;
 exports.default = client;

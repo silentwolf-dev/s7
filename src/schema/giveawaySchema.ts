@@ -1,43 +1,45 @@
 /** @format */
 
-import mongoose, { SchemaTypes } from "mongoose";
+import mongoose, { SchemaTypes, Document } from "mongoose";
+import randomString from "../utils/randomstring";
 
 export interface IGiveawayMetadata {
-	winner_count: Number;
-	expiration: Number,
 	title?: string;
 	description?: string;
 }
 
-export interface IGiveawaySchama {
+export interface IGiveawayDocument extends Document {
 	_id: string;
+
+    guild_id: string,
+
+	winner_count: Number;
+    
+	expiration: Number;
 
 	message_id: string;
 
 	meta?: IGiveawayMetadata;
 }
 
-export const GiveawaySchema = new mongoose.Schema<IGiveawaySchama>(
+export const GiveawaySchema = new mongoose.Schema<IGiveawayDocument>(
 	{
-		_id: SchemaTypes.String,
-		message_id: SchemaTypes.String,
-
-		meta: {
-			winner_count: {
-				type: SchemaTypes.Number,
-				default: 1,
-			},
-
-			title: {
-				type: SchemaTypes.String,
-			},
-
-			description: {
-				type: SchemaTypes.String,
-			},
-
-			expiration: SchemaTypes.Number,
+		_id: {
+			type: SchemaTypes.String,
+			required: true,
 		},
+
+		message_id: {
+			type: SchemaTypes.String,
+			required: true,
+		},
+		 
+
+        winner_count: {
+			type: SchemaTypes.Number,
+			default: 1,
+		},
+
 	},
 	{ timestamps: true }
 );

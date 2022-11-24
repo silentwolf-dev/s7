@@ -17,7 +17,7 @@ module.exports = {
             return;
         const command = client.commands.get(interaction.commandName);
         try {
-            yield command.execute(interaction);
+            yield command.execute(interaction, client);
         }
         catch (error) {
             console.error(error);
