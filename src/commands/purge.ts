@@ -19,7 +19,7 @@ export = {
 		}),
 
 	execute: async (interaction) => {
-		if (interaction.memberPermissions?.has("ManageMessages")) {
+		if (!interaction.memberPermissions?.has("ManageMessages")) {
 			interaction.reply("> ❌ You don't have permission");
 			return;
 		}

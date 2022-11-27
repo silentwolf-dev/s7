@@ -14,7 +14,9 @@ const guildId = "922567360873922661";
 import * as dotenv from "dotenv"
 dotenv.config()
 import { IStorageMap } from "./utils/giveawaymanger";
-console.log(process.env)
+
+
+
 class client extends Client {
 	commands = new Collection<string, any>();
 	giveaways = new Map<string, IStorageMap>()
@@ -73,11 +75,11 @@ class client extends Client {
 					{ body: command }
 				);
 
-				console.log(
-					`successfully reloaded ${data.length} application (/)  commands`
-				);
+				console.log(`Done refreshing ${command.length} application (/) commands.`)
+				
 			} catch (error) {
-				console.error("command loading error", error);
+
+				console.log("command loading error", error);
 			}
 		})();
 	}
@@ -112,8 +114,10 @@ class client extends Client {
 			console.log(`bot is online: ${bot.user.tag}`);
 		});
        */
-
+  
 		this.login(process.env.Token);
+
+	    this.user?.setAvatar('./images/logo.jpeg')
 	};
 };
 

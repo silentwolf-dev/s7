@@ -28,6 +28,7 @@ export = {
 		const target = option.getUser("user", true);
 		const reason = option.getString("reason") || "none";
 		const Guild = interaction.guild;
+        const id = target.id;
 
 		interaction.deferReply();
 
@@ -44,6 +45,22 @@ export = {
 				return;
 			}
 
+            const DmEmbed = new EmbedBuilder({
+				title: "ban",
+				description: `You have been ban from ${interaction.guild?.name} by ${interaction.user.username}`,
+				fields: [
+					{
+						name: 'reason',
+						value: reason,
+						inline: true,
+					}
+				],
+				timestamp: new Date().toISOString(),
+			})
+
+            interaction.client.users.send(id, {embeds: [DmEmbed]})
+
+
 			await Guild?.members.ban(target, { reason });
 
 			const responseEmbed = new EmbedBuilder({
@@ -51,19 +68,21 @@ export = {
 				description: `${target.username} has been **ban!** reason: ${reason}.`,
 				fields: [
 					{
-						name: "**Offender id**",
+						name: "Offender",
 						value: inlineCode(`${target.id}`),
 						inline: true,
 					},
-					{
-						name: "Moderater id",
-						value: inlineCode(`${interaction.user.id}`),
-						inline: true,
-					},
-				],
-				footer: { text: `Moderater: <@${interaction.user.id}>` },
-			});
 
+					{
+						name: "Mod",
+						value: interaction.user.tag,
+						inline: true,
+					}
+				],
+
+				timestamp: new Date().toISOString(),
+			}).setColor("Red");
+            
 			const reply = await interaction.editReply({ embeds: [responseEmbed] });
 		} catch (error) {
 			interaction.reply("Error while executing this command");
